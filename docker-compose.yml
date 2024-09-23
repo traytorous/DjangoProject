@@ -16,12 +16,7 @@ services:
   #    ports:
   #        - 5000:5000
   #    entrypoint: ["/bin/bash", "-c", "while sleep 600; do  :; done"]
-      
-  #  memcached:
-  #  image: "quay.io/redhat-aqe/memcached"
-  #  ports:
-  #      - "11211:11211"
-
+  
   postgres:
     container_name: postgres
     image: postgres
