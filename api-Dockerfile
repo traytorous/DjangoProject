@@ -1,0 +1,23 @@
+FROM registry.fedoraproject.org/fedora:36
+LABEL description="PE tools container api" \
+      summary="Container for Django application" \
+      maintainer="Partner Engineering team" \
+      vendor="Red Hat, Inc." \
+      distribution-scope="public" \
+      vcs-type="git"
+
+
+USER root
+RUN dnf install -y \
+    git \
+    python3\
+    telnet\
+    nc\
+    python3-pip \
+    && dnf clean all
+COPY ./requirements.txt .
+RUN pip3 install -r requirements.txt
+COPY ./api /api
+WORKDIR api
+#RUN /usr/bin/python3 manage.py makemigrations
+#RUN python manage.py migrate

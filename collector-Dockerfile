@@ -1,0 +1,23 @@
+FROM registry.fedoraproject.org/fedora:36
+LABEL description="PE tools container" \
+      summary="Container for gathering collection statistics" \
+      maintainer="Partner Engineering team" \
+      vendor="Red Hat, Inc." \
+      distribution-scope="public" \
+      vcs-type="git"
+
+
+USER root
+RUN dnf install -y \
+    git \
+    python3\
+    python3-pip \
+    && dnf clean all
+
+RUN git clone git@github.com:ansible/partner-engineering.git
+
+WORKDIR /parter-engineering
+
+
+
+

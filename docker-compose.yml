@@ -1,0 +1,72 @@
+version: "3.8"
+networks:
+  app_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "172.18.1.0/24"
+
+services:
+  # I do not have git service account
+  #  collection_data_collector:
+  #    build:
+  #        context: ./
+  #        dockerfile: collector-Dockerfile
+  #    volumes:
+  #    ports:
+  #        - 5000:5000
+  #    entrypoint: ["/bin/bash", "-c", "while sleep 600; do  :; done"]
+      
+  #  memcached:
+  #  image: "quay.io/redhat-aqe/memcached"
+  #  ports:
+  #      - "11211:11211"
+
+  postgres:
+    container_name: postgres
+    image: postgres
+    networks:
+      app_net:
+        ipv4_address: 172.18.1.4
+    volumes:
+      - "./postgres/:/var/lib/postgresql/data/:delegated,z"
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=collections
+      - POSTGRES_USER=trayadmin
+      - POSTGRES_PASSWORD=traypassword
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+
+  collection_data_api:
+    build:
+      context: ./
+      dockerfile: api-Dockerfile
+    networks:
+      app_net:
+        ipv4_address: 172.18.1.5
+    ports:
+      - 8000:8000
+    entrypoint: ["/usr/bin/python3", "manage.py", "runserver" ,"0.0.0.0:8000"]
+
+  pgadmin:
+    image: dpage/pgadmin4
+    networks:
+      app_net:
+        ipv4_address: 172.18.1.6
+
+    volumes:
+      - ./servers.json:/pgadmin4/servers.json:delegated,z
+      - ./pgpas:/var/lib/pgadmin4/storage/domain/pgpas:delegated,z
+    ports:
+      - 8080:80
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=user@domain.com
+      - PGADMIN_DEFAULT_PASSWORD=password
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
