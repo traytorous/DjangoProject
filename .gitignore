@@ -17,3 +17,4 @@ coverage/
 *.pgpas
 node_modules/
 postgres/
+partner-engineering/

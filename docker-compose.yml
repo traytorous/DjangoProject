@@ -8,14 +8,14 @@ networks:
 
 services:
   # I do not have git service account
-  #  collection_data_collector:
-  #    build:
-  #        context: ./
-  #        dockerfile: collector-Dockerfile
-  #    volumes:
-  #    ports:
-  #        - 5000:5000
-  #    entrypoint: ["/bin/bash", "-c", "while sleep 600; do  :; done"]
+  collection_data_collector:
+      build:
+        context: ./
+        dockerfile: collector-Dockerfile
+      networks:
+        app_net:
+          ipv4_address: 172.18.1.8
+      entrypoint: ["/bin/bash", "-c", "while sleep 5; do /usr/bin/bash updatedb.sh | tee test.txt; done"]
   
   postgres:
     container_name: postgres

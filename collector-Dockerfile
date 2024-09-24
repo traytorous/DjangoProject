@@ -14,10 +14,7 @@ RUN dnf install -y \
     python3-pip \
     && dnf clean all
 
-RUN git clone git@github.com:ansible/partner-engineering.git
-
-WORKDIR /parter-engineering
-
-
-
-
+RUN pip install requests ansible-core docker ansible-navigator galaxy-importer ansible-lint psycopg2-binary
+COPY ./partner-engineering /partner-engineering
+COPY ./sync-script.py .
+COPY ./updatedb.sh .
